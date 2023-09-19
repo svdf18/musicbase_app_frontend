@@ -1,5 +1,48 @@
+:root {
+  --black: black;
+  --white: white;
+  --hover: rgb(42, 42, 42); 
+}
+
 body {
   font-family: sans-serif;
   color: white;
   background-color: black;
+}
+
+main {
+  min-height: calc(100vh - 120px);
+  background: var(--black);
+}
+
+.grid-container {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1em;
+  padding: 1em;
+  margin-top: 1em;
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 20px 0;
+}
+
+th, td {
+  padding: 10px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+th {
+  background-color: var(--black);
+}
+
+tr:hover {
+  background-color: var(--hover);
+  cursor: pointer;
+}
+
+#lineSeparator {
+  border: 1px solid rgb(7, 7, 74);
 }

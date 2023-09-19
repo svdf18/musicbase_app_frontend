@@ -8,7 +8,65 @@
   <title>musicbase</title>
 </head>
 <body>
+  
+<main>
+<section class="grid-container">
   <h1>Musicbase</h1>
+  <div id="lineSeparator"></div>
+  <h3>Artists</h3>
+  <table>
+    <thead>
+        <tr>
+            <th>Artist Name</th>
+            <th>Real Name</th>
+            <th>City</th>
+            <th>Active Since</th>
+        </tr>
+    </thead>
+    <tbody id="artistTableBody">
+    </tbody>
+  </table>
+  <div id="lineSeparator"></div>
+  <h3>Releases as Primary Artist</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>Release Title</th>
+        <th>Release Year</th>
+        <th>Label</th>
+      </tr>
+    </thead>
+    <tbody id="releaseTableBody">
+    </tbody>
+  </table>
+  <div id="lineSeparator"></div>
+  <h3>Releases as Featuring Artist</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>Release Title</th>
+        <th>Primary Artist</th>
+        <th>Release Year</th>
+        <th>Label</th>
+      </tr>
+    </thead>
+    <tbody id="featuringTracksTableBody">
+    </tbody>
+  </table>
+  <div id="lineSeparator"></div>
+  <h3>Tracks</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>Track Title</th>
+      </tr>
+    </thead>
+    <tbody id="tracksTableBody">
+    </tbody>
+  </table>
+  <div id="lineSeparator"></div>
+</section>
+</main>
 <script type="module" src="app.js"></script>
 </body>
 </html>
