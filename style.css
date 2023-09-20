@@ -15,13 +15,43 @@ main {
   background: var(--black);
 }
 
-.grid-container {
+.gridContainer {
   display: grid;
   grid-template-columns: 1fr;
   gap: 1em;
   padding: 1em;
   margin-top: 1em;
 }
+
+#headerContainer {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 3em;
+}
+
+#headerBtn {
+  background-color: var(--black);
+  color: var(--white);
+  border: none;
+  border-radius: none;
+  letter-spacing: 0.05em;;
+  margin: 0em, 2em;
+}
+
+#headerBtn:hover {
+  background-color: var(--hover);
+  cursor: pointer;
+}
+
+#searchBar {
+  background-color: var(--black);
+  color: var(--white);
+  border: none;
+  border-radius: none;
+  letter-spacing: 0.05em;;
+}
+
+
 table {
   width: 100%;
   border-collapse: collapse;

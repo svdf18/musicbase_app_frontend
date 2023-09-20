@@ -1,6 +1,8 @@
 
 import { endpoint } from "./app.js";
 
+//ARTISTS
+
 async function readArtists() {
   const response = await fetch(`${endpoint}/artists`);
   const data = await response.json();
@@ -19,6 +21,8 @@ async function getFeaturingTracksByArtist(artistId) {
   return data;
 }
 
+//RELEASES
+
 async function readReleases() {
   const response = await fetch(`${endpoint}/releases`);
   const data = await response.json();
@@ -36,6 +40,8 @@ async function readReleasesByArtist(artistId) {
   const data = await response.json();
   return data;
 }
+
+//TRACKS
 
 async function readTracks() {
   const response = await fetch(`${endpoint}/tracks`);
