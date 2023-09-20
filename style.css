@@ -29,6 +29,22 @@ main {
   gap: 3em;
 }
 
+#releaseGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3em;
+}
+
+#releaseGridContainer {
+  display: grid;
+  grid-template-columns: 1fr;
+}
+
+#releaseGrid th{
+  position: sticky;
+}
+
+
 #headerBtn {
   background-color: var(--black);
   color: var(--white);
@@ -76,3 +92,5 @@ tr:hover {
 #lineSeparator {
   border: 1px solid rgb(7, 7, 74);
 }
+
+
