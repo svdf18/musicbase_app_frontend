@@ -1,5 +1,6 @@
 import { readArtists, getArtistById, getArtistIdByName, readReleases, getReleaseById, getReleaseIdByTitle, readReleasesByArtist, readTracks, readTracksByRelease } from "./db.js";
 import { clearTracksTable, scrollToReleasesTable, scrollToTracksTable } from "./helpers.js";
+import { searchArtists, searchReleases,searchTracks, handleGeneralSearch } from "./search.js"
 
 const endpoint = "http://localhost:3333"
 
@@ -35,6 +36,25 @@ document.querySelector("#releaseTableBody").addEventListener("click", async (eve
   if (releaseId) {
     displayTracksOnRelease(releaseId);
     scrollToTracksTable();
+  }
+});
+
+//Eventlistener for the searchbar
+
+document.querySelector("#searchBar").addEventListener("input", async (event) => {
+  const searchQuery = event.target.value;
+  const artistTableBody = document.querySelector("#artistTableBody");
+  const releaseTableBody = document.querySelector("#releaseTableBody");
+  const tracksTableBody = document.querySelector("#tracksTableBody");
+
+  if (searchQuery) {
+    handleGeneralSearch(searchQuery, artistTableBody, searchArtists, ["artistName", "realName", "city", "activeSince"]);
+    handleGeneralSearch(searchQuery, releaseTableBody, searchReleases, ["releaseTitle", "releaseYear", "label"]);
+    handleGeneralSearch(searchQuery, tracksTableBody, searchTracks, ["trackTitle"]);
+  } else {
+    handleGeneralSearch("", artistTableBody, searchArtists, ["artistName", "realName", "city", "activeSince"]);
+    releaseTableBody.innerHTML = "";
+    tracksTableBody.innerHTML = "";
   }
 });
 
