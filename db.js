@@ -9,6 +9,12 @@ async function readArtists() {
   return data;
 }
 
+async function getArtistById(artistId){
+  const response = await fetch(`${endpoint}/artists/${artistId}`);
+  const data = await response.json();
+  return data;
+}
+
 async function getArtistIdByName(artistName) {
   const artists = await readArtists();
   const selectedArtist = artists.find(artist => artist.artistName === artistName);
@@ -25,6 +31,12 @@ async function getFeaturingTracksByArtist(artistId) {
 
 async function readReleases() {
   const response = await fetch(`${endpoint}/releases`);
+  const data = await response.json();
+  return data;
+}
+
+async function getReleaseById(releaseId) {
+  const response = await fetch(`${endpoint}/releases/${releaseId}`);
   const data = await response.json();
   return data;
 }
@@ -58,4 +70,4 @@ async function readTracksByRelease(releaseId) {
 
 
 
-export { readArtists, getArtistIdByName, getFeaturingTracksByArtist, readReleases, getReleaseIdByTitle, readReleasesByArtist, readTracks, readTracksByRelease };
+export { readArtists, getArtistById, getArtistIdByName, getFeaturingTracksByArtist, readReleases, getReleaseById, getReleaseIdByTitle, readReleasesByArtist, readTracks, readTracksByRelease };

@@ -1,20 +1,30 @@
-import { readArtists, getArtistIdByName, readReleases, getReleaseIdByTitle, readReleasesByArtist, readTracks, readTracksByRelease } from "./db.js";
+import { readArtists, getArtistById, getArtistIdByName, readReleases, getReleaseById, getReleaseIdByTitle, readReleasesByArtist, readTracks, readTracksByRelease } from "./db.js";
 import { clearTracksTable, scrollToReleasesTable, scrollToTracksTable } from "./helpers.js";
 
 const endpoint = "http://localhost:3333"
 
 window.addEventListener("load", initApp);
 
+async function initApp() {
+  const artists = await readArtists();
+  displayArtistList();
+
+  const releaseData = await readReleases();
+  const trackData = await readTracks();
+}
+
 //Eventlistener for artist section
 
-document.querySelector("#artistTableBody").addEventListener("click", async (event) => {
-  const selectedArtistName = event.target.closest("tr").querySelector("td:first-child").textContent;
-  const artistId = await getArtistIdByName(selectedArtistName);
-  if (artistId) {
-    clearTracksTable();
-    displayReleasesByArtist(artistId);
-    scrollToReleasesTable() 
-  };
+document.addEventListener("DOMContentLoaded", () => {
+  document.querySelector("#artistTableBody").addEventListener("click", async (event) => {
+    const selectedArtistName = event.target.closest("tr").querySelector("td:first-child").textContent;
+    const artistId = await getArtistIdByName(selectedArtistName);
+    if (artistId) {
+      clearTracksTable();
+      displayReleasesByArtist(artistId);
+      scrollToReleasesTable() 
+    };
+  });
 });
 
 //Eventlistener for release section
@@ -27,17 +37,6 @@ document.querySelector("#releaseTableBody").addEventListener("click", async (eve
     scrollToTracksTable();
   }
 });
-
-async function initApp() {
-  const artists = await readArtists();
-  displayArtistList();
-
-  const releaseData = await readReleases();
-  const trackData = await readTracks();
-
-  console.log(releaseData);
-  console.log(trackData);
-}
 
 //Display artist list
 
@@ -61,7 +60,13 @@ async function displayArtistList() {
 //Display releases w. clicked artist as Primary Artist
 
 async function displayReleasesByArtist(artistId) {
+  const artist = await getArtistById(artistId);
   const releases = await readReleasesByArtist(artistId);
+
+  const releasesHeading = document.querySelector("#releaseGridContainerL h3");
+  if (releasesHeading) {
+    releasesHeading.textContent = `${artist.artistName} Releases as Primary Artist`;
+  }
   const releasesTableBody = document.querySelector("#releaseTableBody");
   releasesTableBody.innerHTML = "";
 
@@ -78,23 +83,30 @@ async function displayReleasesByArtist(artistId) {
 
 //Display releases w. clicked artist as Featuring Artist
 
-// async function displayFeaturingTracksByArtist(artistId) {
-//   const featuringTracks = await getFeaturingTracksByArtist(artistId);
-//   const featuringTracksTableBody = document.querySelector("#featuringTracksTableBody");
-//   featuringTracksTableBody.innerHTML = "";
-//   featuringTracks.forEach(track => {
-//     const row = document.createElement('tr');
-//     row.innerHTML = `
-//       <td>${track.trackTitle}</td>
-//     `;
-//     featuringTracksTableBody.appendChild(row);
-//   });
-// }
+async function displayFeaturingTracksByArtist(artistId) {
+  const featuringTracks = await getFeaturingTracksByArtist(artistId);
+  const featuringTracksTableBody = document.querySelector("#featuringTracksTableBody");
+  featuringTracksTableBody.innerHTML = "";
+  featuringTracks.forEach(track => {
+    const row = document.createElement('tr');
+    row.innerHTML = `
+      <td>${track.trackTitle}</td>
+    `;
+    featuringTracksTableBody.appendChild(row);
+  });
+}
 
 //Display tracks on clicked release
 
 async function displayTracksOnRelease(releaseId) {
+  const release = await getReleaseById(releaseId);
   const tracks = await readTracksByRelease(releaseId);
+
+  const tracksHeading = document.querySelector("#tracksTableHeading");
+  if (tracksHeading) {
+    tracksHeading.textContent = `Tracklist for ${release.releaseTitle}`;
+  };
+
   const tracksTableBody = document.querySelector("#tracksTableBody");
   tracksTableBody.innerHTML = "";
 
@@ -106,5 +118,7 @@ async function displayTracksOnRelease(releaseId) {
     tracksTableBody.appendChild(row);
   });
 };
+
+
 
 export { endpoint };
