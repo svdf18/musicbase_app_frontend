@@ -93,4 +93,14 @@ tr:hover {
   border: 1px solid rgb(7, 7, 74);
 }
 
+#tracksTableBody tr:hover {
+  background-color: transparent;
+  cursor: default;
+}
+
+#featuringTracksTableBody tr:hover {
+  background-color: transparent;
+  cursor: default;
+}
+
 

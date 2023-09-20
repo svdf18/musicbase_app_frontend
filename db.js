@@ -22,7 +22,7 @@ async function getArtistIdByName(artistName) {
 }
 
 async function getFeaturingTracksByArtist(artistId) {
-  const response = await fetch(`${endpoint}/tracks/${artistId}`);
+  const response = await fetch(`${endpoint}/artists/tracks/${artistId}`);
   const data = await response.json();
   return data;
 }
@@ -47,7 +47,7 @@ async function getReleaseIdByTitle(releaseTitle) {
   return selectedRelease ? selectedRelease.releaseId : null;
 }
 
-async function readReleasesByArtist(artistId) {
+async function getReleasesByArtist(artistId) {
   const response = await fetch(`${endpoint}/releases/artist/${artistId}`);
   const data = await response.json();
   return data;
@@ -70,4 +70,4 @@ async function readTracksByRelease(releaseId) {
 
 
 
-export { readArtists, getArtistById, getArtistIdByName, getFeaturingTracksByArtist, readReleases, getReleaseById, getReleaseIdByTitle, readReleasesByArtist, readTracks, readTracksByRelease };
+export { readArtists, getArtistById, getArtistIdByName, getFeaturingTracksByArtist, readReleases, getReleaseById, getReleaseIdByTitle, getReleasesByArtist, readTracks, readTracksByRelease };

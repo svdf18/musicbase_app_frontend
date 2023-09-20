@@ -1,4 +1,4 @@
-import { readArtists, getArtistById, getArtistIdByName, readReleases, getReleaseById, getReleaseIdByTitle, readReleasesByArtist, readTracks, readTracksByRelease } from "./db.js";
+import { readArtists, getArtistById, getArtistIdByName, readReleases, getReleaseById, getReleaseIdByTitle, getReleasesByArtist, getFeaturingTracksByArtist, readTracks, readTracksByRelease } from "./db.js";
 import { clearTracksTable, scrollToReleasesTable, scrollToTracksTable } from "./helpers.js";
 
 const endpoint = "http://localhost:3333"
@@ -12,6 +12,9 @@ async function initApp() {
   const releaseData = await readReleases();
   const trackData = await readTracks();
 }
+//Eventlistener for HeaderBtn & createforms
+
+
 
 //Eventlistener for artist section
 
@@ -22,6 +25,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (artistId) {
       clearTracksTable();
       displayReleasesByArtist(artistId);
+      displayFeaturingTracksByArtist(artistId);
       scrollToReleasesTable() 
     };
   });
@@ -61,7 +65,7 @@ async function displayArtistList() {
 
 async function displayReleasesByArtist(artistId) {
   const artist = await getArtistById(artistId);
-  const releases = await readReleasesByArtist(artistId);
+  const releases = await getReleasesByArtist(artistId);
 
   const releasesHeading = document.querySelector("#releaseGridContainerL h3");
   if (releasesHeading) {
@@ -82,19 +86,34 @@ async function displayReleasesByArtist(artistId) {
 };
 
 //Display releases w. clicked artist as Featuring Artist
-
 async function displayFeaturingTracksByArtist(artistId) {
+  const artist = await getArtistById(artistId);
   const featuringTracks = await getFeaturingTracksByArtist(artistId);
+
+  console.log('Artist:', artist);
+
+  // Log the API response for debugging
+  console.log('API Response:', featuringTracks);
+
+  const featuringTracksHeading = document.querySelector("#releaseGridContainerR h3");
+  if (featuringTracksHeading) {
+    featuringTracksHeading.textContent = `${ artist.artistName } Releases as Featuring Artist`;
+  }
+
   const featuringTracksTableBody = document.querySelector("#featuringTracksTableBody");
   featuringTracksTableBody.innerHTML = "";
+
   featuringTracks.forEach(track => {
-    const row = document.createElement('tr');
-    row.innerHTML = `
-      <td>${track.trackTitle}</td>
-    `;
-    featuringTracksTableBody.appendChild(row);
+    if (track.artistRole === 'FEATURING ARTIST') {
+      const row = document.createElement('tr');
+      row.innerHTML = `
+        <td>${track.trackTitle || ''}</td>
+      `;
+      featuringTracksTableBody.appendChild(row);
+    }
   });
 }
+
 
 //Display tracks on clicked release
 
@@ -118,7 +137,6 @@ async function displayTracksOnRelease(releaseId) {
     tracksTableBody.appendChild(row);
   });
 };
-
 
 
 export { endpoint };
