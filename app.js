@@ -1,6 +1,6 @@
 import { readArtists, getArtistById, getArtistIdByName, readReleases, getReleaseById, getReleaseIdByTitle, getReleasesByArtist, getFeaturingTracksByArtist, readTracks, readTracksByRelease } from "./db.js";
 import { clearTracksTable, scrollToReleasesTable, scrollToTracksTable } from "./helpers.js";
-import { searchArtists, searchReleases,searchTracks, handleGeneralSearch } from "./search.js"
+import { handleSearch } from "./search.js"
 
 const endpoint = "http://localhost:3333"
 
@@ -12,10 +12,9 @@ async function initApp() {
 
   const releaseData = await readReleases();
   const trackData = await readTracks();
-}
+};
+
 //Eventlistener for HeaderBtn & createforms
-
-
 
 //Eventlistener for artist section
 
@@ -43,26 +42,8 @@ document.querySelector("#releaseTableBody").addEventListener("click", async (eve
   }
 });
 
-//Eventlistener for the searchbar
-
-document.querySelector("#searchBar").addEventListener("input", async (event) => {
-  const searchQuery = event.target.value;
-  const artistTableBody = document.querySelector("#artistTableBody");
-  const releaseTableBody = document.querySelector("#releaseTableBody");
-  const tracksTableBody = document.querySelector("#tracksTableBody");
-
-  if (searchQuery) {
-    handleGeneralSearch(searchQuery, artistTableBody, searchArtists, ["artistName", "realName", "city", "activeSince"]);
-    handleGeneralSearch(searchQuery, releaseTableBody, searchReleases, ["releaseTitle", "releaseYear", "label"]);
-    handleGeneralSearch(searchQuery, tracksTableBody, searchTracks, ["trackTitle"]);
-  } else {
-    handleGeneralSearch("", artistTableBody, searchArtists, ["artistName", "realName", "city", "activeSince"]);
-    releaseTableBody.innerHTML = "";
-    tracksTableBody.innerHTML = "";
-  }
-});
-
-//Display artist list
+// Eventlistener for the searchbar
+document.querySelector("#searchBar").addEventListener("input", handleSearch);
 
 async function displayArtistList() {
   const artistData = await readArtists();
@@ -132,7 +113,7 @@ async function displayFeaturingTracksByArtist(artistId) {
       featuringTracksTableBody.appendChild(row);
     }
   });
-}
+};
 
 
 //Display tracks on clicked release
