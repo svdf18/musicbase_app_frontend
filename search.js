@@ -92,4 +92,4 @@ function createMessageRow(message, colspan) {
   return row;
 };
 
-export { searchArtists, searchReleases,searchTracks, handleGeneralSearch };  
+export { searchArtists, searchReleases,searchTracks, handleGeneralSearch };
