@@ -1,6 +1,6 @@
 # Musicbase Frontend
 
-## Links
+## Links (husk at opdatere links)
 
 - [Backend Repository](https://github.com/svdf18/musicbase_app_backend)
 - [Deployed Backend](backend-deployment-link)
