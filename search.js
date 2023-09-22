@@ -1,7 +1,8 @@
 import { endpoint } from "./app.js";
+import { readArtists } from "./db.js";
+
 
 // Function to get the appropriate search function based on the selected category
-
 async function handleSearch(event) {
   const searchQuery = event.target.value;
   const selectedCategory = document.querySelector("#headerBtn").value;
@@ -12,6 +13,7 @@ async function handleSearch(event) {
   clearTables(artistTableBody, releaseTableBody, tracksTableBody);
 
   if (searchQuery) {
+    // Handle search when the query is not empty
     if (selectedCategory === "general") {
       handleGeneralSearch(searchQuery, artistTableBody, searchArtists, ["artistName", "realName", "city", "activeSince"]);
       handleGeneralSearch(searchQuery, releaseTableBody, searchReleases, ["releaseTitle", "releaseYear", "label"]);
@@ -24,9 +26,26 @@ async function handleSearch(event) {
       handleGeneralSearch(searchQuery, tableBody, searchFunction, displayColumns);
     }
   } else {
-    const tableBody = getTableBody(selectedCategory, artistTableBody, releaseTableBody, tracksTableBody);
-    handleGeneralSearch("", tableBody, getCategorySearchFunction(selectedCategory), getCategoryDisplayColumns(selectedCategory));
+    // Handle reset and display all artists when the query is empty
+    resetAndDisplayAllArtists(artistTableBody);
   }
+}
+
+// Function to reset and display all artists
+async function resetAndDisplayAllArtists(artistTableBody) {
+  const artistData = await readArtists();
+  artistTableBody.innerHTML = "";
+
+  artistData.forEach(artist => {
+    const row = document.createElement('tr');
+    row.innerHTML = `
+      <td>${artist.artistName}</td>
+      <td>${artist.realName}</td>
+      <td>${artist.city}</td>
+      <td>${artist.activeSince}</td>
+    `;
+    artistTableBody.appendChild(row);
+  });
 }
 
 // Function to clear tables based on the selected category
