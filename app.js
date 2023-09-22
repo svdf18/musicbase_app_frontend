@@ -2,7 +2,7 @@ import { readArtists, getArtistById, getArtistIdByName, readReleases, getRelease
 import { clearTracksTable, scrollToReleasesTable, scrollToTracksTable } from "./helpers.js";
 import { handleSearch } from "./search.js"
 
-const endpoint = "http://localhost:3333"
+const endpoint = "https://musicbase-app-backend.azurewebsites.net/"
 
 window.addEventListener("load", initApp);
 
