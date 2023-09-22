@@ -3,7 +3,7 @@ import { clearTracksTable, scrollToReleasesTable, scrollToTracksTable } from "./
 import { handleSearch } from "./search.js"
 
 const endpoint = "https://musicbase-app-backend.azurewebsites.net/"
-// const endpoint = "https://localhost:3333"
+// const endpoint = "https://localhost:3333" -- enable this endpoint if you want to run the app locally
 
 window.addEventListener("load", initApp);
 
