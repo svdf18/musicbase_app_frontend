@@ -1,11 +1,10 @@
-import { readArtists, getArtistById, getArtistIdByName, readReleases, getReleaseById, getReleaseIdByTitle, getReleasesByArtist, getFeaturingTracksByArtist, readTracks, readTracksByRelease } from "./db.js";
+import { readArtists, getArtistById, getArtistIdByName, getReleaseById, getReleaseIdByTitle, getReleasesByArtist, getFeaturingTracksByArtist, readTracksByRelease } from "./db.js";
 import { clearTracksTable, scrollToReleasesTable, scrollToTracksTable } from "./helpers.js";
 import { handleSearch } from "./search.js";
-import ListRenderer from "./list-renderer.js";
-import { ArtistRenderer } from "./artist-renderer.js";
-import { ReleaseRenderer } from "./release-renderer.js";
-import { TrackRenderer } from "./track-renderer.js";
-
+import ListRenderer from "./view/list-renderer.js";
+import { ArtistRenderer } from "./view/artist-renderer.js";
+import { ReleaseRenderer } from "./view/release-renderer.js";
+import { TrackRenderer } from "./view/track-renderer.js";
 
 
 const endpoint = "https://musicbase-app-backend-production.azurewebsites.net/"
@@ -17,11 +16,7 @@ async function initApp() {
   const artists = await readArtists();
 
   const artistListRenderer = new ListRenderer(artists, "#artistTableBody", ArtistRenderer);
-
   artistListRenderer.render();
-
-  const releaseData = await readReleases();
-  const trackData = await readTracks();
 };
 
 //Eventlistener for HeaderBtn & createforms
@@ -67,7 +62,6 @@ async function displayReleasesByArtist(artistId) {
   }
 
   const releaseListRenderer = new ListRenderer(releases, "#releaseTableBody", ReleaseRenderer);
-
   releaseListRenderer.render();
 };
 
@@ -113,7 +107,6 @@ async function displayTracksOnRelease(releaseId) {
   }
 
   const tracksListRenderer = new ListRenderer(tracks, "#tracksTableBody", TrackRenderer);
-
   tracksListRenderer.render();
 }
 
