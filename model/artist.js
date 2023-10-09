@@ -1,16 +1,14 @@
-export function construct(artistData) {
-  const ArtistObject = {
-    id: artistData.id,
-    artistName: artistData.artistName,
-    realName: artistData.realName,
-    city: artistData.city,
-    activeSince: artistData.activeSince,
+export default class Artist {
+ constructor(artistData) {
+    this.id = artistData.artistId;
+    this.artistName = artistData.artistName;
+    this.realName = artistData.realName;
+    this.city = artistData.city;
+    this.activeSince = artistData.activeSince;
+
+     Object.defineProperty(this, 'id', {
+      configurable: false,
+      writable: false
+     });
   };
-
-  Object.defineProperty(ArtistObject, "id", {
-    configurable: false,
-    writable: false,
-  });
-
-  return ArtistObject;
 }

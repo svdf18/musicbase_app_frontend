@@ -1,13 +1,11 @@
-export function construct(trackData) {
-  const tracjObject = {
-    id: trackData.id,
-    trackTitle: trackData.trackTitle,
-  };
-
-  Object.defineProperty(TrackObject, "id", {
-    configurable: false,
-    writable: false
-  });
-
-  return TrackObject;
+export default class Track {
+ constructor(trackData) {
+    this.id = trackData.trackId;
+    this.trackTitle = trackData.trackTitle;
+    
+    Object.defineProperty(this, 'id', {
+      configurable: false,
+      writable: false
+     });
+    };
 }
