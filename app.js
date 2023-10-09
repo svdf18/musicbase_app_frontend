@@ -1,15 +1,23 @@
 import { readArtists, getArtistById, getArtistIdByName, readReleases, getReleaseById, getReleaseIdByTitle, getReleasesByArtist, getFeaturingTracksByArtist, readTracks, readTracksByRelease } from "./db.js";
 import { clearTracksTable, scrollToReleasesTable, scrollToTracksTable } from "./helpers.js";
-import { handleSearch } from "./search.js"
+import { handleSearch } from "./search.js";
+import ListRenderer from "./list-renderer.js";
+import { ArtistRenderer } from "./artist-renderer.js";
+import { ReleaseRenderer } from "./release-renderer.js";
+
+
 
 const endpoint = "https://musicbase-app-backend-production.azurewebsites.net/"
-// const endpoint = "https://localhost:3333" -- enable this endpoint if you want to run the app locally
+// const endpoint = "https://127.0.0.1:3333" // enable this endpoint if you want to run the app locally
 
 window.addEventListener("load", initApp);
 
 async function initApp() {
   const artists = await readArtists();
-  displayArtistList();
+
+  const artistListRenderer = new ListRenderer(artists, "#artistTableBody", ArtistRenderer);
+
+  artistListRenderer.render();
 
   const releaseData = await readReleases();
   const trackData = await readTracks();
@@ -46,23 +54,6 @@ document.querySelector("#releaseTableBody").addEventListener("click", async (eve
 // Eventlistener for the searchbar
 document.querySelector("#searchBar").addEventListener("input", handleSearch);
 
-async function displayArtistList() {
-  const artistData = await readArtists();
-
-  const artistTableBody = document.querySelector("#artistTableBody");
-
-  artistData.forEach(artist => {
-    const row = document.createElement('tr');
-    row.innerHTML = `
-        <td>${artist.artistName}</td>
-        <td>${artist.realName}</td>
-        <td>${artist.city}</td>
-        <td>${artist.activeSince}</td>
-    `;
-    artistTableBody.appendChild(row);
-  });
-}
-
 //Display releases w. clicked artist as Primary Artist
 
 async function displayReleasesByArtist(artistId) {
@@ -73,18 +64,10 @@ async function displayReleasesByArtist(artistId) {
   if (releasesHeading) {
     releasesHeading.textContent = `${artist.artistName} Releases as Primary Artist`;
   }
-  const releasesTableBody = document.querySelector("#releaseTableBody");
-  releasesTableBody.innerHTML = "";
 
-  releases.forEach(release => {
-    const row = document.createElement('tr');
-    row.innerHTML = `
-        <td>${release.releaseTitle}</td>
-        <td>${release.releaseYear}</td>
-        <td>${release.label}</td>
-    `;
-    releaseTableBody.appendChild(row);
-  });
+  const releaseListRenderer = new ListRenderer(releases, "#releaseTableBody", ReleaseRenderer);
+
+  releaseListRenderer.render();
 };
 
 //Display releases w. clicked artist as Featuring Artist
