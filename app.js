@@ -4,6 +4,7 @@ import { handleSearch } from "./search.js";
 import ListRenderer from "./list-renderer.js";
 import { ArtistRenderer } from "./artist-renderer.js";
 import { ReleaseRenderer } from "./release-renderer.js";
+import { TrackRenderer } from "./track-renderer.js";
 
 
 

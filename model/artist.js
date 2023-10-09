@@ -1,6 +1,6 @@
 export function construct(artistData) {
   const ArtistObject = {
-    id: artistData.id, // Assuming you have an ID property in your artist data
+    id: artistData.id,
     artistName: artistData.artistName,
     realName: artistData.realName,
     city: artistData.city,
