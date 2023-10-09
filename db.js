@@ -1,25 +1,28 @@
-
 import { endpoint } from "./app.js";
+import Artist from "./model/artist.js";
+import Release from "./model/release.js";
+// import Track from "./model/track.js";
 
 //ARTISTS
 
 async function readArtists() {
   const response = await fetch(`${endpoint}/artists`);
   const data = await response.json();
-  return data;
+  return data.map(artistData => new Artist(artistData));
 }
 
-async function getArtistById(artistId){
+async function getArtistById(artistId) {
   const response = await fetch(`${endpoint}/artists/${artistId}`);
   const data = await response.json();
-  return data;
+  return new Artist(data);
 }
 
 async function getArtistIdByName(artistName) {
   const artists = await readArtists();
   const selectedArtist = artists.find(artist => artist.artistName === artistName);
-  return selectedArtist ? selectedArtist.artistId : null;
+  return selectedArtist ? selectedArtist.id : null;
 }
+
 
 async function getFeaturingTracksByArtist(artistId) {
   const response = await fetch(`${endpoint}/artists/tracks/${artistId}`);
@@ -32,19 +35,19 @@ async function getFeaturingTracksByArtist(artistId) {
 async function readReleases() {
   const response = await fetch(`${endpoint}/releases`);
   const data = await response.json();
-  return data;
+  return data.map(releaseData => new Release(releaseData));
 }
 
 async function getReleaseById(releaseId) {
   const response = await fetch(`${endpoint}/releases/${releaseId}`);
   const data = await response.json();
-  return data;
+  return new Release(data);
 }
 
 async function getReleaseIdByTitle(releaseTitle) {
   const releases = await readReleases();
   const selectedRelease = releases.find(release => release.releaseTitle === releaseTitle);
-  return selectedRelease ? selectedRelease.releaseId : null;
+  return selectedRelease ? selectedRelease.id : null;
 }
 
 async function getReleasesByArtist(artistId) {
@@ -58,7 +61,9 @@ async function getReleasesByArtist(artistId) {
 async function readTracks() {
   const response = await fetch(`${endpoint}/tracks`);
   const data = await response.json();
-  return data;
+  // console.log(data);
+  // console.log(data.map(trackData => new Artist(trackData)));
+  return data
 }
 
 async function readTracksByRelease(releaseId) {
