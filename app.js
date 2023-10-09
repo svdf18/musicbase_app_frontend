@@ -110,19 +110,11 @@ async function displayTracksOnRelease(releaseId) {
   const tracksHeading = document.querySelector("#tracksTableHeading");
   if (tracksHeading) {
     tracksHeading.textContent = `Tracklist for ${release.releaseTitle}`;
-  };
+  }
 
-  const tracksTableBody = document.querySelector("#tracksTableBody");
-  tracksTableBody.innerHTML = "";
+  const tracksListRenderer = new ListRenderer(tracks, "#tracksTableBody", TrackRenderer);
 
-  tracks.forEach(track => {
-    const row = document.createElement('tr');
-    row.innerHTML = `
-      <td>${track.trackTitle}</td
-    `;
-    tracksTableBody.appendChild(row);
-  });
-};
-
+  tracksListRenderer.render();
+}
 
 export { endpoint };
