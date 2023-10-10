@@ -1,16 +1,13 @@
-export function construct(releaseData) {
-  const ReleaseObject = {
-    id: releaseData.id,
-    releaseName: releaseData.releaseName,
-    releaseTitle: releaseData.releaseTitle,
-    releaseYear: releaseData.releaseYear,
-    label: releaseData.label,
-  };
+export default class Release {
+ constructor(releaseData) {
+    this.id = releaseData.releaseId;
+    this.releaseTitle = releaseData.releaseTitle;
+    this.releaseYear = releaseData.releaseYear;
+    this.label = releaseData.label;
 
-  Object.defineProperty(ReleaseObject, "id", {
-    configurable: false,
-    writable: false
-  });
-
-  return ReleaseObject;
+    Object.defineProperty(this, 'id', {
+      configurable: false,
+      writable: false
+     });
+    };
 }
