@@ -1,5 +1,5 @@
 import { readArtists, getArtistById, getArtistIdByName, getReleaseById, getReleaseIdByTitle, getReleasesByArtist, getFeaturingTracksByArtist, readTracksByRelease } from "./db.js";
-import { clearTracksTable, scrollToReleasesTable, scrollToTracksTable } from "./helpers.js";
+import { clearTracksTable, clearFeaturingTracksTable, scrollToReleasesTable, scrollToTracksTable } from "./helpers.js";
 import { handleSearch } from "./search.js";
 import ListRenderer from "./view/list-renderer.js";
 import { ArtistRenderer } from "./view/artist-renderer.js";
@@ -29,6 +29,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const artistId = await getArtistIdByName(selectedArtistName);
     if (artistId) {
       clearTracksTable();
+      clearFeaturingTracksTable();
       displayReleasesByArtist(artistId);
       displayFeaturingTracksByArtist(artistId);
       scrollToReleasesTable() 
@@ -70,29 +71,19 @@ async function displayFeaturingTracksByArtist(artistId) {
   const artist = await getArtistById(artistId);
   const featuringTracks = await getFeaturingTracksByArtist(artistId);
 
-  console.log('Artist:', artist);
-
-  // Log the API response for debugging
-  console.log('API Response:', featuringTracks);
-
   const featuringTracksHeading = document.querySelector("#releaseGridContainerR h3");
   if (featuringTracksHeading) {
-    featuringTracksHeading.textContent = `${ artist.artistName } Releases as Featuring Artist`;
+    featuringTracksHeading.textContent = `${artist.artistName} Releases as Featuring Artist`;
   }
 
-  const featuringTracksTableBody = document.querySelector("#featuringTracksTableBody");
-  featuringTracksTableBody.innerHTML = "";
+  const filteredFeaturingTracks = featuringTracks.filter(track => track.artistRole === 'FEATURING ARTIST');
 
-  featuringTracks.forEach(track => {
-    if (track.artistRole === 'FEATURING ARTIST') {
-      const row = document.createElement('tr');
-      row.innerHTML = `
-        <td>${track.trackTitle || ''}</td>
-      `;
-      featuringTracksTableBody.appendChild(row);
-    }
-  });
-};
+  if (filteredFeaturingTracks.length > 0) {
+    const featuringTracksListRenderer = new ListRenderer(filteredFeaturingTracks, "#featuringTracksTableBody", TrackRenderer);
+
+    featuringTracksListRenderer.render();
+  }
+}
 
 
 //Display tracks on clicked release
