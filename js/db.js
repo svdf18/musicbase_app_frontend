@@ -1,7 +1,7 @@
 import { endpoint } from "./app.js";
 import Artist from "./model/artist.js";
 import Release from "./model/release.js";
-// import Track from "./model/track.js";
+import Track from "./model/track.js";
 
 //ARTISTS
 
@@ -22,7 +22,6 @@ async function getArtistIdByName(artistName) {
   const selectedArtist = artists.find(artist => artist.artistName === artistName);
   return selectedArtist ? selectedArtist.id : null;
 }
-
 
 async function getFeaturingTracksByArtist(artistId) {
   const response = await fetch(`${endpoint}/artists/tracks/${artistId}`);
@@ -61,9 +60,7 @@ async function getReleasesByArtist(artistId) {
 async function readTracks() {
   const response = await fetch(`${endpoint}/tracks`);
   const data = await response.json();
-  // console.log(data);
-  // console.log(data.map(trackData => new Artist(trackData)));
-  return data
+  return data.map(trackData => new Track(trackData));
 }
 
 async function readTracksByRelease(releaseId) {
