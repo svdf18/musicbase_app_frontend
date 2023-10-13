@@ -5,6 +5,11 @@ function clearTracksTable() {
   tracksTableBody.innerHTML = "";
 }
 
+function clearFeaturingTracksTable() {
+  const featuringTracksTableBody = document.querySelector("#featuringTracksTableBody");
+  featuringTracksTableBody.innerHTML = "";
+}
+
 //Scroll on click
 
 function scrollToReleasesTable() {
@@ -21,4 +26,4 @@ function scrollToTracksTable() {
   }
 }
 
-export { clearTracksTable, scrollToReleasesTable, scrollToTracksTable };
+export { clearTracksTable, clearFeaturingTracksTable, scrollToReleasesTable, scrollToTracksTable };
