@@ -1,5 +1,5 @@
 import { readArtists, getArtistById, getArtistIdByName, getReleaseById, getReleaseIdByTitle, getReleasesByArtist, getFeaturingTracksByArtist, readTracksByRelease } from "./db.js";
-import { clearTracksTable, clearFeaturingTracksTable, scrollToReleasesTable, scrollToTracksTable } from "./helpers.js";
+import { clearFeaturingTracksTable, scrollToReleasesTable, scrollToTracksTable } from "./helpers.js";
 import { handleSearch } from "./search.js";
 import ListRenderer from "./view/list-renderer.js";
 import { ArtistRenderer } from "./view/artist-renderer.js";
@@ -19,16 +19,13 @@ async function initApp() {
   artistListRenderer.render();
 };
 
-//Eventlistener for HeaderBtn & createforms
-
 //Eventlistener for artist section
-
 document.addEventListener("DOMContentLoaded", () => {
   document.querySelector("#artistTableBody").addEventListener("click", async (event) => {
     const selectedArtistName = event.target.closest("tr").querySelector("td:first-child").textContent;
     const artistId = await getArtistIdByName(selectedArtistName);
     if (artistId) {
-      clearTracksTable();
+      new ListRenderer().clearTracksTable()
       clearFeaturingTracksTable();
       displayReleasesByArtist(artistId);
       displayFeaturingTracksByArtist(artistId);
@@ -38,7 +35,6 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 //Eventlistener for release section
-
 document.querySelector("#releaseTableBody").addEventListener("click", async (event) => {
   const selectedReleaseTitle = event.target.closest("tr").querySelector("td:first-child").textContent;
   const releaseId = await getReleaseIdByTitle(selectedReleaseTitle);
@@ -52,7 +48,6 @@ document.querySelector("#releaseTableBody").addEventListener("click", async (eve
 document.querySelector("#searchBar").addEventListener("input", handleSearch);
 
 //Display releases w. clicked artist as Primary Artist
-
 async function displayReleasesByArtist(artistId) {
   const artist = await getArtistById(artistId);
   const releases = await getReleasesByArtist(artistId);
@@ -87,7 +82,6 @@ async function displayFeaturingTracksByArtist(artistId) {
 
 
 //Display tracks on clicked release
-
 async function displayTracksOnRelease(releaseId) {
   const release = await getReleaseById(releaseId);
   const tracks = await readTracksByRelease(releaseId);
