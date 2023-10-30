@@ -12,4 +12,28 @@ export default class ListRenderer {
       this.container.insertAdjacentHTML("beforeend", html);
     }
   }
+
+  clearTracksTable() {
+  const tracksTableBody = document.querySelector("#tracksTableBody");
+  tracksTableBody.innerHTML = "";
+}
+
+ clearTable(tableBody) {
+  if (tableBody) {
+    tableBody.innerHTML = "";
+  }
+}
+
+showResults(tableBody, results, displayColumns) {
+  results.forEach((result) => {
+    const row = document.createElement('tr');
+    displayColumns.forEach((column) => {
+      const cell = document.createElement('td');
+      cell.textContent = result[column];
+      row.appendChild(cell);
+    });
+    tableBody.appendChild(row);
+  });
+};
+
 }
