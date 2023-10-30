@@ -1,6 +1,6 @@
 import { endpoint } from "./app.js";
 import { readArtists } from "./db.js";
-
+import ListRenderer from "./view/list-renderer.js";
 
 // Function to get the appropriate search function based on the selected category
 async function handleSearch(event) {
@@ -49,15 +49,13 @@ async function resetAndDisplayAllArtists(artistTableBody) {
 }
 
 // Function to clear tables based on the selected category
-
 function clearTables(artistTableBody, releaseTableBody, tracksTableBody) {
-  clearTable(artistTableBody);
-  clearTable(releaseTableBody);
-  clearTable(tracksTableBody);
+  new ListRenderer().clearTable(artistTableBody);
+  new ListRenderer().clearTable(releaseTableBody);
+  new ListRenderer().clearTable(tracksTableBody);
 }
 
 // Function to determine the table body based on the selected category
-
 function getTableBody(selectedCategory, artistTableBody, releaseTableBody, tracksTableBody) {
   switch (selectedCategory) {
     case "artists":
@@ -72,7 +70,6 @@ function getTableBody(selectedCategory, artistTableBody, releaseTableBody, track
 }
 
 // Function to get the appropriate search function based on the selected category
-
 function getCategorySearchFunction(category) {
   switch (category) {
     case "artists":
@@ -102,7 +99,6 @@ function getCategoryDisplayColumns(category) {
 }
 
 // Function to search for artists based on a search query
-
 async function searchArtists(searchQuery) {
   const response = await fetch(`${endpoint}/artists/search/query?q=${searchQuery}`);
   const data = await response.json();
@@ -118,7 +114,6 @@ async function searchReleases(searchQuery) {
 };
 
 // Function to search for tracks based on a search query
-
 async function searchTracks(searchQuery) {
   const response = await fetch(`${endpoint}/tracks/search/query?q=${searchQuery}`);
   const data = await response.json();
@@ -126,23 +121,22 @@ async function searchTracks(searchQuery) {
 };
 
 // General management of handling and showing search results
-
 async function handleGeneralSearch(searchQuery, tableBody, searchFunction, displayColumns) {
-  clearTable(tableBody);
+  new ListRenderer().clearTable(tableBody);
 
   if (searchFunction) {
     if (searchQuery) {
       const searchResults = await searchFunction(searchQuery);
 
       if (searchResults.length > 0) {
-        showResults(tableBody, searchResults, displayColumns);
+        new ListRenderer().showResults(tableBody, searchResults, displayColumns);
       } else {
         displayNoResultsMessage(tableBody, displayColumns);
       }
     } else {
       const allItems = await searchFunction("");
       if (allItems.length > 0) {
-        showResults(tableBody, allItems, displayColumns);
+        new ListRenderer().showResults(tableBody, allItems, displayColumns);
       } else {
         displayNoResultsMessage(tableBody, displayColumns);
       }
@@ -150,44 +144,13 @@ async function handleGeneralSearch(searchQuery, tableBody, searchFunction, displ
   }
 }
 
-// Clears content of table
-
-function clearTable(tableBody) {
-  if (tableBody) {
-    tableBody.innerHTML = "";
-  }
-}
-
-// Populates table with search results
-
-function showResults(tableBody, results, displayColumns) {
-  results.forEach((result) => {
-    const row = createTableRow(result, displayColumns);
-    tableBody.appendChild(row);
-  });
-};
-
-// Generates row with found data
-
-function createTableRow(data, displayColumns) {
-  const row = document.createElement('tr');
-  displayColumns.forEach((column) => {
-    const cell = document.createElement('td');
-    cell.textContent = data[column];
-    row.appendChild(cell);
-  });
-  return row;
-};
-
 // Displays message
-
 function displayNoResultsMessage(tableBody, displayColumns) {
   const row = createMessageRow(`No results found.`, displayColumns.length);
   tableBody.appendChild(row);
 };
 
 // Fits message to row and columns
-
 function createMessageRow(message, colspan) {
   const row = document.createElement('tr');
   const cell = document.createElement('td');
