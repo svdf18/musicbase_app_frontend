@@ -1,6 +1,7 @@
 import { endpoint } from "./app.js";
 import { readArtists } from "./db.js";
 import ListRenderer from "./view/list-renderer.js";
+import { ArtistRenderer } from "./view/artist-renderer.js";
 
 // Function to get the appropriate search function based on the selected category
 async function handleSearch(event) {
@@ -36,16 +37,10 @@ async function resetAndDisplayAllArtists(artistTableBody) {
   const artistData = await readArtists();
   artistTableBody.innerHTML = "";
 
-  artistData.forEach(artist => {
-    const row = document.createElement('tr');
-    row.innerHTML = `
-      <td>${artist.artistName}</td>
-      <td>${artist.realName}</td>
-      <td>${artist.city}</td>
-      <td>${artist.activeSince}</td>
-    `;
-    artistTableBody.appendChild(row);
-  });
+  for (const artist of artistData) {
+    const html = ArtistRenderer.render(artist);
+    artistTableBody.insertAdjacentHTML("beforeend", html);
+  }
 }
 
 // Function to clear tables based on the selected category
