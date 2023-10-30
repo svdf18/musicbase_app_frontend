@@ -1,17 +1,10 @@
 //Clear tracks table
-
-function clearTracksTable() {
-  const tracksTableBody = document.querySelector("#tracksTableBody");
-  tracksTableBody.innerHTML = "";
-}
-
 function clearFeaturingTracksTable() {
   const featuringTracksTableBody = document.querySelector("#featuringTracksTableBody");
   featuringTracksTableBody.innerHTML = "";
 }
 
 //Scroll on click
-
 function scrollToReleasesTable() {
   const releasesTable = document.querySelector("#releaseTableBody");
   if (releasesTable) {
@@ -26,4 +19,4 @@ function scrollToTracksTable() {
   }
 }
 
-export { clearTracksTable, clearFeaturingTracksTable, scrollToReleasesTable, scrollToTracksTable };
+export { clearFeaturingTracksTable, scrollToReleasesTable, scrollToTracksTable };
