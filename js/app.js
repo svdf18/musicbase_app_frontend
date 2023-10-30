@@ -1,18 +1,22 @@
-import { readArtists, getArtistById, getArtistIdByName, readReleases, getReleaseById, getReleaseIdByTitle, getReleasesByArtist, getFeaturingTracksByArtist, readTracks, readTracksByRelease } from "./db.js";
-import { clearTracksTable, scrollToReleasesTable, scrollToTracksTable } from "./helpers.js";
-import { handleSearch } from "./search.js"
+import { readArtists, getArtistById, getArtistIdByName, getReleaseById, getReleaseIdByTitle, getReleasesByArtist, getFeaturingTracksByArtist, readTracksByRelease } from "./db.js";
+import { clearTracksTable, clearFeaturingTracksTable, scrollToReleasesTable, scrollToTracksTable } from "./helpers.js";
+import { handleSearch } from "./search.js";
+import ListRenderer from "./view/list-renderer.js";
+import { ArtistRenderer } from "./view/artist-renderer.js";
+import { ReleaseRenderer } from "./view/release-renderer.js";
+import { TrackRenderer } from "./view/track-renderer.js";
+
 
 const endpoint = "https://musicbase-app-backend-production.azurewebsites.net/"
-// const endpoint = "https://localhost:3333" -- enable this endpoint if you want to run the app locally
+// const endpoint = "https://127.0.0.1:3333" // enable this endpoint if you want to run the app locally
 
 window.addEventListener("load", initApp);
 
 async function initApp() {
   const artists = await readArtists();
-  displayArtistList();
 
-  const releaseData = await readReleases();
-  const trackData = await readTracks();
+  const artistListRenderer = new ListRenderer(artists, "#artistTableBody", ArtistRenderer);
+  artistListRenderer.render();
 };
 
 //Eventlistener for HeaderBtn & createforms
@@ -25,6 +29,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const artistId = await getArtistIdByName(selectedArtistName);
     if (artistId) {
       clearTracksTable();
+      clearFeaturingTracksTable();
       displayReleasesByArtist(artistId);
       displayFeaturingTracksByArtist(artistId);
       scrollToReleasesTable() 
@@ -46,23 +51,6 @@ document.querySelector("#releaseTableBody").addEventListener("click", async (eve
 // Eventlistener for the searchbar
 document.querySelector("#searchBar").addEventListener("input", handleSearch);
 
-async function displayArtistList() {
-  const artistData = await readArtists();
-
-  const artistTableBody = document.querySelector("#artistTableBody");
-
-  artistData.forEach(artist => {
-    const row = document.createElement('tr');
-    row.innerHTML = `
-        <td>${artist.artistName}</td>
-        <td>${artist.realName}</td>
-        <td>${artist.city}</td>
-        <td>${artist.activeSince}</td>
-    `;
-    artistTableBody.appendChild(row);
-  });
-}
-
 //Display releases w. clicked artist as Primary Artist
 
 async function displayReleasesByArtist(artistId) {
@@ -73,18 +61,9 @@ async function displayReleasesByArtist(artistId) {
   if (releasesHeading) {
     releasesHeading.textContent = `${artist.artistName} Releases as Primary Artist`;
   }
-  const releasesTableBody = document.querySelector("#releaseTableBody");
-  releasesTableBody.innerHTML = "";
 
-  releases.forEach(release => {
-    const row = document.createElement('tr');
-    row.innerHTML = `
-        <td>${release.releaseTitle}</td>
-        <td>${release.releaseYear}</td>
-        <td>${release.label}</td>
-    `;
-    releaseTableBody.appendChild(row);
-  });
+  const releaseListRenderer = new ListRenderer(releases, "#releaseTableBody", ReleaseRenderer);
+  releaseListRenderer.render();
 };
 
 //Display releases w. clicked artist as Featuring Artist
@@ -92,29 +71,19 @@ async function displayFeaturingTracksByArtist(artistId) {
   const artist = await getArtistById(artistId);
   const featuringTracks = await getFeaturingTracksByArtist(artistId);
 
-  console.log('Artist:', artist);
-
-  // Log the API response for debugging
-  console.log('API Response:', featuringTracks);
-
   const featuringTracksHeading = document.querySelector("#releaseGridContainerR h3");
   if (featuringTracksHeading) {
-    featuringTracksHeading.textContent = `${ artist.artistName } Releases as Featuring Artist`;
+    featuringTracksHeading.textContent = `${artist.artistName} Releases as Featuring Artist`;
   }
 
-  const featuringTracksTableBody = document.querySelector("#featuringTracksTableBody");
-  featuringTracksTableBody.innerHTML = "";
+  const filteredFeaturingTracks = featuringTracks.filter(track => track.artistRole === 'FEATURING ARTIST');
 
-  featuringTracks.forEach(track => {
-    if (track.artistRole === 'FEATURING ARTIST') {
-      const row = document.createElement('tr');
-      row.innerHTML = `
-        <td>${track.trackTitle || ''}</td>
-      `;
-      featuringTracksTableBody.appendChild(row);
-    }
-  });
-};
+  if (filteredFeaturingTracks.length > 0) {
+    const featuringTracksListRenderer = new ListRenderer(filteredFeaturingTracks, "#featuringTracksTableBody", TrackRenderer);
+
+    featuringTracksListRenderer.render();
+  }
+}
 
 
 //Display tracks on clicked release
@@ -126,19 +95,10 @@ async function displayTracksOnRelease(releaseId) {
   const tracksHeading = document.querySelector("#tracksTableHeading");
   if (tracksHeading) {
     tracksHeading.textContent = `Tracklist for ${release.releaseTitle}`;
-  };
+  }
 
-  const tracksTableBody = document.querySelector("#tracksTableBody");
-  tracksTableBody.innerHTML = "";
-
-  tracks.forEach(track => {
-    const row = document.createElement('tr');
-    row.innerHTML = `
-      <td>${track.trackTitle}</td
-    `;
-    tracksTableBody.appendChild(row);
-  });
-};
-
+  const tracksListRenderer = new ListRenderer(tracks, "#tracksTableBody", TrackRenderer);
+  tracksListRenderer.render();
+}
 
 export { endpoint };
